@@ -93,7 +93,9 @@ def findClosestPoint(p1,p2):
 def boundObjects(frame,thresh):
     global counter,width,halfH,halfW,prev_x,prev_y,minArea,numCnts
     global p1_count_line,p2_count_line,font,ctrs,GUI
-    cnts,_ = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    
+    #cnts,_ = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)                #this line is for opencv 2.4
+    _,cnts,_ = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)               #here is how it is done in opencv 3.1; (findContours() returns an extra value)
     cnts = sorted(cnts,key = cv2.contourArea,reverse=True)[:numCnts]    
 
     index = 1
@@ -103,7 +105,8 @@ def boundObjects(frame,thresh):
             continue
 
         rect = cv2.minAreaRect(c)
-        points = cv2.cv.BoxPoints(rect)
+        #points = cv2.cv.BoxPoints(rect)            #This line was good for opencv 2.4, but in version 3.1, the cv part is removed:
+        points = cv2.boxPoints(rect)                # This is the way to do it in opencv 3.1
         points = np.int0(points)
 
         #Getting the center coordinates of the contour box
