@@ -13,9 +13,7 @@ is recommended.
 As part of the research, I wrote blog posts describing the progress made each week. It can be found
 at:
 
-```
-(https://wordpress.com/posts/andrescscresearch.wordpress.com)
-```
+https://wordpress.com/posts/andrescscresearch.wordpress.com
 
 ## Paper Draft
 
