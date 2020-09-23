@@ -23,7 +23,7 @@ import time
   ##
   #The counting system is very fragile and simple. It is also very easily implemented
     # but it probably has less than 70 or 60% accuracy for counting vehicles. At least it is
-    #able to run on the Raspberry Pi B if the right set up is present. 
+    #able to run on the Raspberry Pi B if the right set up is present.
 ##----------------------Setting up the Argument Parser----------------------##
 
 parser = argparse.ArgumentParser(description='Finds the contours on a video file')          #creates a parser object
@@ -47,7 +47,7 @@ args=vars(parser.parse_args())
 
 ##-------------------------Function Definitions----------------------------##
 def info(real_num,calc_num):
-    
+
     real_num = float(real_num)
     calc_num = float(calc_num)
     d = abs(real_num-calc_num)
@@ -62,7 +62,7 @@ def info(real_num,calc_num):
 def clickEvent(event,x,y,flags,userdata):
     global rect
     if event==cv2.EVENT_LBUTTONDOWN:
-        rect.append((y,x))                  #Numpy manages the coordinates as (y,x) instead of (x,y) like the rest of the world
+        rect.append((y,x))                  #Numpy manages the coordinates as (y,x) instead of (x,y)
 
 def clickEventPoly(event,x,y,flags,userdata):
     global poly
@@ -80,21 +80,23 @@ def saveToDisk(event,x,y,flags,userdata):
 
 
 ##=============================
-        
+
 def findClosestPoint(p1,p2):
     '''Compares two points (2D) and returns their euclidean distance.
     It might be more efficient to use numpy's linalg.norm() function.'''
 
     dist = math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
-    
+
     return dist
-        
-        
+
+
 def boundObjects(frame,thresh):
     global counter,width,halfH,halfW,prev_x,prev_y,minArea,numCnts
     global p1_count_line,p2_count_line,font,ctrs,GUI
-    cnts,_ = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-    cnts = sorted(cnts,key = cv2.contourArea,reverse=True)[:numCnts]    
+
+    cnts,_ = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)                #this line is for opencv 2.4, and also now for OpenCV 4.4, so this is the current one
+    #_,cnts,_ = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)               #here is how it is done in opencv 3.1; (findContours() returns an extra value)
+    cnts = sorted(cnts,key = cv2.contourArea,reverse=True)[:numCnts]
 
     index = 1
     current_cent = []       #a list of the centroids in the current frame
@@ -103,7 +105,8 @@ def boundObjects(frame,thresh):
             continue
 
         rect = cv2.minAreaRect(c)
-        points = cv2.cv.BoxPoints(rect)
+        #points = cv2.cv.BoxPoints(rect)            #This line was good for opencv 2.4, but in version 3.1, the cv part is removed:
+        points = cv2.boxPoints(rect)                # This is the way to do it in opencv 3.1
         points = np.int0(points)
 
         #Getting the center coordinates of the contour box
@@ -113,7 +116,7 @@ def boundObjects(frame,thresh):
         w,h = rect[1]                   #Unpacks the width and height of the frame
 
         C = np.array((cx,cy))
-        current_cent.append((cx,cy))        
+        current_cent.append((cx,cy))
 
         #Finding the centroid of c in the previous frame
         if len(ctrs)==0: prev_x,prev_y = cx,cy
@@ -132,7 +135,7 @@ def boundObjects(frame,thresh):
             else: prev_x,prev_y = cx,cy
         #ctrs = current_cent
 
-        
+
         #Determines if the line has been crossed
         if args['direction'][0].upper()=='H':
             if (prev_y <= p1_count_line[1] <= cy) or (cy <= p1_count_line[1] <= prev_y):
@@ -153,7 +156,7 @@ def boundObjects(frame,thresh):
         cv2.putText(frame,str(index),(cx,cy-15),font,0.4,(255,0,0),2)
 
         index += 1
-        
+
     ctrs = current_cent
 
 
@@ -171,7 +174,7 @@ elif args['webcam']is not None:
     if len(args['webcam']) > 1:             #if the desired video resolution is indicated, use it
        cap.set(3,args['webcam'][1])
        cap.set(4,args['webcam'][2])
-       
+
 else:
     cap = cv2.VideoCapture(args['path'])    #otherwise, use the given path or namec
 
@@ -196,7 +199,7 @@ while k != ord('q') and k != ord('Q') and k != 27:
         break
 cv2.destroyWindow('setup')
 
-    
+
 if not ALL_WINDOW:
     roi = np.array([rect])
     box = cv2.boundingRect(roi)
@@ -217,7 +220,7 @@ while k!=ord('q') and k != ord('Q') and k != 27:
     if k ==ord('\n'):
         poly = []
         break
-    
+
 cv2.destroyWindow('setup2')
 roi_poly = np.array([poly])
 
@@ -287,13 +290,13 @@ while 1:
   ##------Extra blur------##
     fmask = cv2.GaussianBlur(fmask,(21,21),0)
     fmask = cv2.blur(fmask,(28,28))
-    #fmask = cv2.GaussianBlur(fmask,(21,21),0)
-    #fmask = cv2.GaussianBlur(fmask,(21,21),0)
-    #fmask = cv2.GaussianBlur(fmask,(21,21),0)
-    
-    
+    fmask = cv2.GaussianBlur(fmask,(21,21),0)
+    fmask = cv2.GaussianBlur(fmask,(21,21),0)
+    fmask = cv2.GaussianBlur(fmask,(21,21),0)
+
+
     _,thresh = cv2.threshold(fmask,30,255,0)
-    
+
  ##-----Noise reduction-----##
     dimg = cv2.erode(thresh,None)      #Dilate function expands the white contours
     dimg = cv2.dilate(dimg,None)
@@ -307,12 +310,12 @@ while 1:
 #-------------------------------------------
     #Setting the boxes for the bounding process
     img2 = cv2.cvtColor(window_mask,cv2.COLOR_GRAY2BGR)
-    boundObjects(img2,dimg)         
+    boundObjects(img2,dimg)
 ##---------------Showing The Frames-----------------##
     cv2.imshow('roi',roi_mask)
     cv2.imshow('polygon',window_mask)
     cv2.imshow('average', result)
-    cv2.line(img2,p1_count_line,p2_count_line,(0,0,255),1)    
+    cv2.line(img2,p1_count_line,p2_count_line,(0,0,255),1)
     cv2.imshow('boxes',img2)
 ##-------------Termination Conditions-------------##
     #cv2.setMouseCallback('boxes',saveToDisk)                #When the window is clicked, a screenshot is saved to the current directory
@@ -327,7 +330,7 @@ while 1:
         cv2.imwrite("""dimg_{0}.jpeg""".format(cap.get(1)),dimg2)
         cv2.imwrite("""thresh_{0}.jpeg""".format(cap.get(1)),thresh)
         cv2.imwrite("""fmask_{0}.jpeg""".format(cap.get(1)),fmask)
-    
+
 #print("""Time on main loop: {0} secs""".format(str(round(time.time()-init_time,2))))
 print('Vehicles Detected: '+str(counter))
 #info(real_num,counter)
