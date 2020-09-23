@@ -4,6 +4,7 @@ import cv2			#Python bindings for OpenCV
 import argparse                 #Allows the program to take arguments from the command line
 import numpy as np		#API for matrix operations
 import time
+import os 
 
 ##--------------------------Useful Information----------------------------##
     #flags for the threshold function, with their respective indices:
@@ -322,14 +323,28 @@ while 1:
     k = cv2.waitKey(40) & 0xFF
     if k == 27 or k == ord('q') or k == ord('Q'):
         break
+
+    screenshot_folder = "_screenshots"
+    if not os.path.exists(screenshot_folder):
+        os.mkdir(screenshot_folder)
+
     elif k == ord('s') or k == ord('S'):            #if the letter s/S is pressed, a screenshot of the current frame on each window will be saved to the current folder
-        cv2.imwrite("""screenshot_{0}.jpeg""".format(cap.get(1)),img2)
-        cv2.imwrite("""win_mask_{0}.jpeg""".format(cap.get(1)),window_mask)
-        cv2.imwrite("""roi_mask_{0}.jpeg""".format(cap.get(1)),roi_mask)
-        cv2.imwrite("""res_{0}.jpeg""".format(cap.get(1)),result)
-        cv2.imwrite("""dimg_{0}.jpeg""".format(cap.get(1)),dimg2)
-        cv2.imwrite("""thresh_{0}.jpeg""".format(cap.get(1)),thresh)
-        cv2.imwrite("""fmask_{0}.jpeg""".format(cap.get(1)),fmask)
+        frame_id = cap.get(1)
+        cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_screenshot.jpeg"),img2)
+        cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_win_mask.jpeg"),window_mask)
+        cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_roi_mask.jpeg"),roi_mask)
+        cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_res.jpeg"),result)
+        cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_dimg.jpeg"),dimg2)
+        cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_thresh.jpeg"),thresh)
+        cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_fmask.jpeg"),fmask)
+        
+        #cv2.imwrite(os.path.join(screenshot_folder,"""screenshot_{0}.jpeg""".format(cap.get(1)),img2))
+        #cv2.imwrite(os.path.join(screenshot_folder,"""win_mask_{0}.jpeg""".format(cap.get(1)),window_mask))
+        #cv2.imwrite(os.path.join(screenshot_folder,"""roi_mask_{0}.jpeg""".format(cap.get(1)),roi_mask))
+        #cv2.imwrite(os.path.join(screenshot_folder,"""res_{0}.jpeg""".format(cap.get(1)),result))
+        #cv2.imwrite(os.path.join(screenshot_folder,"""dimg_{0}.jpeg""".format(cap.get(1)),dimg2))
+        #cv2.imwrite(os.path.join(screenshot_folder,"""thresh_{0}.jpeg""".format(cap.get(1)),thresh))
+        #cv2.imwrite(os.path.join(screenshot_folder,"""fmask_{0}.jpeg""".format(cap.get(1)),fmask))
 
 #print("""Time on main loop: {0} secs""".format(str(round(time.time()-init_time,2))))
 print('Vehicles Detected: '+str(counter))
