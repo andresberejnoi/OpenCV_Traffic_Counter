@@ -1,5 +1,8 @@
 # Traffic Counter
 
+![car counting](./screenshots/177.0_screenshot.jpeg)
+![car counting](./screenshots/177.0_thresh.jpeg)
+
 This is the result of my undergraduate summer of research (2015) for the computer science department at Berea College. The OpenCV library is used to detect moving objects in a video feed by background subtraction and edge detection. 
 
 No machine learning or fancy AI is being done here. This was mainly to keep the processing requirements low.
