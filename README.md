@@ -36,10 +36,10 @@ As you can see, the first image was cropped in a square. The second image shows 
 
 ## Blog Post
 
-As part of the research, I wrote blog posts describing the progress made each week. It can be found
+As part of the research requirements, I wrote blog posts describing the progress made each week. It can be found
 at:
 
-https://wordpress.com/posts/andrescscresearch.wordpress.com
+[blog series](https://andrescscresearch.wordpress.com/)
 
 ## Paper Draft
 
