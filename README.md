@@ -49,6 +49,6 @@ A paper report of the work is also included in the repository:
 [PaperReport_traffic_counter.pdf](./PaperReport_traffic_counter.pdf)
 
 ## Other links
-I will be posting Python videos to my YoutTube channel, among other projects. If you are interested in checking it out, here is the link:
+I will be posting Python videos to my YouTube channel, among other projects. If you are interested in checking it out, here is the link:
 
 [Andres Berejnoi Channel](https://www.youtube.com/andresberejnoi)
