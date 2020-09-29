@@ -318,6 +318,7 @@ while 1:
     cv2.imshow('average', result)
     cv2.line(img2,p1_count_line,p2_count_line,(0,0,255),1)
     cv2.imshow('boxes',img2)
+    cv2.imshow('fmask',fmask)
 ##-------------Termination Conditions-------------##
     #cv2.setMouseCallback('boxes',saveToDisk)                #When the window is clicked, a screenshot is saved to the current directory
     k = cv2.waitKey(40) & 0xFF
