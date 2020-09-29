@@ -40,7 +40,7 @@ is a float number from 0 to 1 indicating the place at which the
 line should be drawn.""")
 parser.add_argument('-n','--numCount',type=int,default=10,help="""The number of contours to be detected by the program.""")
 parser.add_argument('-w','--webcam',type=int,nargs='+',help="""Allows the user to specify which to use as the video source""")
-
+parser.add_argument('--rgb',action='store_true',help="Boolean flag to use rbg colors. Default is to use grayscale")
 
 args=vars(parser.parse_args())
 
@@ -183,7 +183,8 @@ else:
 
 _,img = cap.read()                          #gets the initial frame
 img2 = img.copy()
-img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+if not args['rgb']:
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 #average = np.float32(img)
 
 ##---------------Setting up ROI---------------------------------------
@@ -264,6 +265,10 @@ else: raise ValueError('Expected an "H" or a "V" only')
 ##-----------------------------------------------------------------------------------------##
 #||||||||||||||||||||||||||||||||||||||| MAIN LOOP ||||||||||||||||||||||||||||||||||
 ##------------------------------------------------------------------------------------
+screenshot_folder = "_screenshots"
+if not os.path.exists(screenshot_folder):
+    os.mkdir(screenshot_folder)
+
 init_time = time.time()
 while 1:
     grabbed,img = cap.read()
@@ -273,7 +278,9 @@ while 1:
     if not ALL_WINDOW:
         roi_mask = img[x:x+w,y:y+h]
     else: roi_mask = img
-    roi_mask = cv2.cvtColor(roi_mask,cv2.COLOR_BGR2GRAY)
+
+    if not args['rgb']:
+        roi_mask = cv2.cvtColor(roi_mask,cv2.COLOR_BGR2GRAY)
 
     if not black_mask is None:
         window_mask = cv2.bitwise_and(roi_mask,black_mask)
@@ -310,7 +317,10 @@ while 1:
     dimg2 = dimg.copy()                             #A copy just to keep the original intact
 #-------------------------------------------
     #Setting the boxes for the bounding process
-    img2 = cv2.cvtColor(window_mask,cv2.COLOR_GRAY2BGR)
+    if not args['rgb']:
+        img2 = cv2.cvtColor(window_mask,cv2.COLOR_GRAY2BGR)
+    else:
+        img2 = window_mask.copy()
     boundObjects(img2,dimg)
 ##---------------Showing The Frames-----------------##
     cv2.imshow('roi',roi_mask)
@@ -324,10 +334,6 @@ while 1:
     k = cv2.waitKey(40) & 0xFF
     if k == 27 or k == ord('q') or k == ord('Q'):
         break
-
-    screenshot_folder = "_screenshots"
-    if not os.path.exists(screenshot_folder):
-        os.mkdir(screenshot_folder)
 
     elif k == ord('s') or k == ord('S'):            #if the letter s/S is pressed, a screenshot of the current frame on each window will be saved to the current folder
         frame_id = cap.get(1)
