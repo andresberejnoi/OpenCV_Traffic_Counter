@@ -183,7 +183,9 @@ else:
 ##----------------------------------------------------------------------------##
 
 _,img = cap.read()                          #gets the initial frame
+
 img2 = img.copy()
+#img2 = imutils.resize(img2,width=640)
 if not args['rgb']:
     img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 #average = np.float32(img)
@@ -275,7 +277,7 @@ if not os.path.exists(screenshot_folder):
 if len(args['video_out']) > 0:
     video_out = True
     video_res = (640,480)
-    video_fps = 15.0
+    video_fps = cap.get(cv2.CAP_PROP_FPS)
     video_format = '.mp4'
     if not os.path.exists(video_out_folder):
         os.mkdir(video_out_folder)
