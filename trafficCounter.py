@@ -274,25 +274,28 @@ if not os.path.exists(screenshot_folder):
 #-------- Creating video writer
 if len(args['video_out']) > 0:
     video_out = True
+    video_res = (640,480)
+    video_fps = 15.0
+    video_format = '.mp4'
     if not os.path.exists(video_out_folder):
         os.mkdir(video_out_folder)
 
     base_output_video_name = args['video_out']
     fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
-    screenshot_out  = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_screenshot'+'.avi'),
-                                     fourcc,30,(640,480))
-    win_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name +'_win_mask'+'.avi'),
-                                     fourcc,30,(640,480))
-    roi_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_roi_mask'+'.avi'),
-                                     fourcc,30,(640,480))
-    res_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_res_mask'+'.avi'),
-                                     fourcc,30,(640,480))
-    dimg_mask_out   = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_dimg_mask'+'.avi'),
-                                     fourcc,30,(640,480))
-    thresh_mask_out = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_thresh_mask'+'.avi'),
-                                     fourcc,30,(640,480))
-    fmask_out       = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_fmask'+'.avi'),
-                                     fourcc,30,(640,480))
+    screenshot_out  = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_screenshot'+ video_format),
+                                     fourcc,video_fps,video_res)
+    win_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name +'_win_mask'+ video_format),
+                                     fourcc,video_fps,video_res)
+    roi_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_roi_mask'+ video_format),
+                                     fourcc,video_fps,video_res)
+    res_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_res_mask'+ video_format),
+                                     fourcc,video_fps,video_res)
+    dimg_mask_out   = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_dimg_mask'+ video_format),
+                                     fourcc,video_fps,video_res)
+    thresh_mask_out = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_thresh_mask'+ video_format),
+                                     fourcc,video_fps,video_res)
+    fmask_out       = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_fmask'+ video_format),
+                                     fourcc,video_fps,video_res)
 
     
 
@@ -394,5 +397,5 @@ if video_out:
     dimg_mask_out.release()
     thresh_mask_out.release()
     fmask_out.release()
-    
+
 cv2.destroyAllWindows()
