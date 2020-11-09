@@ -180,13 +180,6 @@ else:
     cap = cv2.VideoCapture(args['path'])    #otherwise, use the given path or namec
 
 
-#-------- Creating video writer
-if len(args['video_out']) > 0:
-    base_output_video_name = args['video_out']
-    fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
-    screenshot_out = cv2.VideoWriter('video.avi',fourcc,10,(640,480)) 
-
-
 ##----------------------------------------------------------------------------##
 
 _,img = cap.read()                          #gets the initial frame
@@ -274,8 +267,34 @@ else: raise ValueError('Expected an "H" or a "V" only')
 #||||||||||||||||||||||||||||||||||||||| MAIN LOOP ||||||||||||||||||||||||||||||||||
 ##------------------------------------------------------------------------------------
 screenshot_folder = "_screenshots"
+video_out_folder  = "_videos"
 if not os.path.exists(screenshot_folder):
     os.mkdir(screenshot_folder)
+
+#-------- Creating video writer
+if len(args['video_out']) > 0:
+    video_out = True
+    if not os.path.exists(video_out_folder):
+        os.mkdir(video_out_folder)
+
+    base_output_video_name = args['video_out']
+    fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
+    screenshot_out  = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_screenshot'+'.avi'),
+                                     fourcc,30,(640,480))
+    win_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name +'_win_mask'+'.avi'),
+                                     fourcc,30,(640,480))
+    roi_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_roi_mask'+'.avi'),
+                                     fourcc,30,(640,480))
+    res_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_res_mask'+'.avi'),
+                                     fourcc,30,(640,480))
+    dimg_mask_out   = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_dimg_mask'+'.avi'),
+                                     fourcc,30,(640,480))
+    thresh_mask_out = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_thresh_mask'+'.avi'),
+                                     fourcc,30,(640,480))
+    fmask_out       = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_fmask'+'.avi'),
+                                     fourcc,30,(640,480))
+
+    
 
 init_time = time.time()
 while 1:
@@ -343,7 +362,7 @@ while 1:
     if k == 27 or k == ord('q') or k == ord('Q'):
         break
 
-    elif k == ord('s') or k == ord('S'):            #if the letter s/S is pressed, a screenshot of the current frame on each window will be saved to the current folder
+    if k == ord('s') or k == ord('S'):            #if the letter s/S is pressed, a screenshot of the current frame on each window will be saved to the current folder
         frame_id = cap.get(1)
         cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_screenshot.jpeg"),img2)
         cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_win_mask.jpeg"),window_mask)
@@ -353,17 +372,27 @@ while 1:
         cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_thresh.jpeg"),thresh)
         cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_fmask.jpeg"),fmask)
         
-        #cv2.imwrite(os.path.join(screenshot_folder,"""screenshot_{0}.jpeg""".format(cap.get(1)),img2))
-        #cv2.imwrite(os.path.join(screenshot_folder,"""win_mask_{0}.jpeg""".format(cap.get(1)),window_mask))
-        #cv2.imwrite(os.path.join(screenshot_folder,"""roi_mask_{0}.jpeg""".format(cap.get(1)),roi_mask))
-        #cv2.imwrite(os.path.join(screenshot_folder,"""res_{0}.jpeg""".format(cap.get(1)),result))
-        #cv2.imwrite(os.path.join(screenshot_folder,"""dimg_{0}.jpeg""".format(cap.get(1)),dimg2))
-        #cv2.imwrite(os.path.join(screenshot_folder,"""thresh_{0}.jpeg""".format(cap.get(1)),thresh))
-        #cv2.imwrite(os.path.join(screenshot_folder,"""fmask_{0}.jpeg""".format(cap.get(1)),fmask))
+    if video_out:
+        screenshot_out.write(img2)
+        win_mask_out.write(window_mask)
+        roi_mask_out.write(roi_mask)
+        res_mask_out.write(result)
+        dimg_mask_out.write(dimg2)
+        thresh_mask_out.write(thresh)
+        fmask_out.write(fmask)
 
 #print("""Time on main loop: {0} secs""".format(str(round(time.time()-init_time,2))))
 print('Vehicles Detected: '+str(counter))
 #info(real_num,counter)
 
 cap.release()
+if video_out:
+    screenshot_out.release()
+    win_mask_out.release()
+    roi_mask_out.release()
+    res_mask_out.release()
+    dimg_mask_out.release()
+    thresh_mask_out.release()
+    fmask_out.release()
+    
 cv2.destroyAllWindows()
