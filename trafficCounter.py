@@ -41,7 +41,7 @@ line should be drawn.""")
 parser.add_argument('-n','--numCount',type=int,default=10,help="""The number of contours to be detected by the program.""")
 parser.add_argument('-w','--webcam',type=int,nargs='+',help="""Allows the user to specify which to use as the video source""")
 parser.add_argument('--rgb',action='store_true',help="Boolean flag to use rbg colors. Default is to use grayscale")
-
+parser.add_argument('-v','--video_out',type=str,default="",help="Provide a video filename to output")
 args=vars(parser.parse_args())
 
 
@@ -178,6 +178,14 @@ elif args['webcam']is not None:
 
 else:
     cap = cv2.VideoCapture(args['path'])    #otherwise, use the given path or namec
+
+
+#-------- Creating video writer
+if len(args['video_out']) > 0:
+    base_output_video_name = args['video_out']
+    fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
+    screenshot_out = cv2.VideoWriter('video.avi',fourcc,10,(640,480)) 
+
 
 ##----------------------------------------------------------------------------##
 
