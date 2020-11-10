@@ -5,6 +5,7 @@ import argparse                 #Allows the program to take arguments from the c
 import numpy as np		#API for matrix operations
 import time
 import os 
+import imutils
 
 ##--------------------------Useful Information----------------------------##
     #flags for the threshold function, with their respective indices:
@@ -184,6 +185,14 @@ else:
 
 _,img = cap.read()                          #gets the initial frame
 
+grabbed,img = cap.read()
+while not grabbed:
+    grabbed,img = cap.read()    #just making sure that a valid frame is read
+
+img = imutils.resize(img,width=640)
+#vid_height,vid_width,_ = img.shape
+
+
 img2 = img.copy()
 #img2 = imutils.resize(img2,width=640)
 if not args['rgb']:
@@ -191,21 +200,20 @@ if not args['rgb']:
 #average = np.float32(img)
 
 ##---------------Setting up ROI---------------------------------------
-ALL_WINDOW = False
+ALL_WINDOW = True
 cv2.namedWindow('setup',1)
 k = None
 rect = []
 cv2.imshow('setup',img2)
-while k != ord('q') and k != ord('Q') and k != 27:
+while k != ord('q') and k != ord('Q') and k != 27 and k != ('\n'):
     cv2.setMouseCallback('setup',clickEvent)
     k = cv2.waitKey(0) & 0xFF
-    if k == ord('\n'):
-        ALL_WINDOW = True
-        break
+
 cv2.destroyWindow('setup')
 
 
-if not ALL_WINDOW:
+if len(rect) > 0:
+    ALL_WINDOW = False
     roi = np.array([rect])
     box = cv2.boundingRect(roi)
     x,y,w,h = box
@@ -213,6 +221,14 @@ if not ALL_WINDOW:
 
 else:
     roi_mask = img
+
+#vid_height,vid_width,_ = roi_mask.shape
+vid_height = roi_mask.shape[0]
+vid_width  = roi_mask.shape[1]
+
+#cap.set(cv2.CAP_PROP_FRAME_WIDTH,vid_width)   # float
+#cap.set(cv2.CAP_PROP_FRAME_HEIGHT,vid_height)  # float
+
 poly = []
 print('Now select the exact ROI you want')
 k=None
@@ -237,6 +253,8 @@ if len(poly)!= 0:
 
     average = np.float32(black_mask)
 else: average = np.float32(roi_mask)
+
+average = cv2.resize(average, (vid_width,vid_height))
 
 #---------------setting global variables---------------##
 width = roi_mask.shape[1]
@@ -276,14 +294,20 @@ if not os.path.exists(screenshot_folder):
 #-------- Creating video writer
 if len(args['video_out']) > 0:
     video_out = True
-    video_res = (640,480)
+    video_res = (int(vid_width),int(vid_height))
     video_fps = cap.get(cv2.CAP_PROP_FPS)
-    video_format = '.mp4'
+    video_format = '.avi'
     if not os.path.exists(video_out_folder):
         os.mkdir(video_out_folder)
 
     base_output_video_name = args['video_out']
-    fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
+    #fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
+    mjpg = 'MJPG'
+    xdiv = 'XDIV'
+    divx = 'DIVX'
+    x264 = 'X264'
+    mp4v = 'MP4V'
+    fourcc = cv2.VideoWriter_fourcc(*mjpg)
     screenshot_out  = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name + '_screenshot'+ video_format),
                                      fourcc,video_fps,video_res)
     win_mask_out    = cv2.VideoWriter(os.path.join(video_out_folder, base_output_video_name +'_win_mask'+ video_format),
@@ -307,6 +331,7 @@ while 1:
     if not grabbed:
         break
     #--------------
+    img = cv2.resize(img, (vid_width,vid_height))
     if not ALL_WINDOW:
         roi_mask = img[x:x+w,y:y+h]
     else: roi_mask = img
