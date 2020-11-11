@@ -70,7 +70,7 @@ class TrafficCounter(object):
     
     def _draw_bounding_boxes(self,frame,contour_id,bounding_points,cx,cy,prev_cx,prev_cy):
         cv2.drawContours(frame,[bounding_points],0,(0,255,0),1)
-        cv2.line(frame,(prev_cx,prev_cy),(cx,cy),(0,0,255),1)         #count line when it is inactive
+        cv2.line(frame,(prev_cx,prev_cy),(cx,cy),(0,0,255),1)         #line between last position and current position
         cv2.circle(frame,(cx,cy),3,(0,0,255),4)
         cv2.putText(frame,str(contour_id),(cx,cy-15),self.font,0.4,(255,0,0),2)
 
