@@ -2,6 +2,7 @@ Convolution/
 Training_set_images/
 test_code/
 _screenshots/
+__pycache__/
 
 *.avi
 *.mp4
