@@ -201,7 +201,7 @@ if not args['rgb']:
 
 ##---------------Setting up ROI---------------------------------------
 ALL_WINDOW = True
-cv2.namedWindow('setup',1)
+#cv2.namedWindow('setup',1)
 k = None
 rect = []
 cv2.imshow('setup',img2)
@@ -292,6 +292,7 @@ if not os.path.exists(screenshot_folder):
     os.mkdir(screenshot_folder)
 
 #-------- Creating video writer
+video_out = False
 if len(args['video_out']) > 0:
     video_out = True
     video_res = (int(vid_width),int(vid_height))
@@ -300,6 +301,7 @@ if len(args['video_out']) > 0:
     if not os.path.exists(video_out_folder):
         os.mkdir(video_out_folder)
 
+    print(f'Output Resolution: {video_res}')
     base_output_video_name = args['video_out']
     #fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
     mjpg = 'MJPG'
@@ -344,6 +346,9 @@ while 1:
     else:
         window_mask = roi_mask
     #--------------
+
+    print(f'Window_mask shape: {window_mask.shape}')
+    print(f'average shape: {average.shape}')
     if frame_num < 1:            #Hardcoded value indicating how many frames to let pass once the video begins
         frame_num += 1
         cv2.accumulateWeighted(window_mask,average,rate)
@@ -352,19 +357,21 @@ while 1:
     result = cv2.convertScaleAbs(average)       #the average background
     fmask = cv2.absdiff(result,window_mask)         #difference between the running average background and the current frame
 
-  ##------Extra blur------##
+    ##------Extra blur------##
+    
     fmask = cv2.GaussianBlur(fmask,(21,21),0)
     fmask = cv2.blur(fmask,(28,28))
     fmask = cv2.GaussianBlur(fmask,(21,21),0)
     fmask = cv2.GaussianBlur(fmask,(21,21),0)
     fmask = cv2.GaussianBlur(fmask,(21,21),0)
 
-
     _,thresh = cv2.threshold(fmask,30,255,0)
 
+    
+
  ##-----Noise reduction-----##
-    dimg = cv2.erode(thresh,None)      #Dilate function expands the white contours
-    dimg = cv2.dilate(dimg,None)
+    #dimg = cv2.erode(thresh,None)      #Dilate function expands the white contours
+    dimg = cv2.dilate(thresh,None)
     dimg = cv2.dilate(dimg,None)
     dimg = cv2.dilate(dimg,None)
     dimg = cv2.dilate(dimg,None)                  #Noise reduction function
