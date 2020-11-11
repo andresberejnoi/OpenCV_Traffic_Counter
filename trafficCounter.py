@@ -347,8 +347,8 @@ while 1:
         window_mask = roi_mask
     #--------------
 
-    print(f'Window_mask shape: {window_mask.shape}')
-    print(f'average shape: {average.shape}')
+    #print(f'Window_mask shape: {window_mask.shape}')
+    #print(f'average shape: {average.shape}')
     if frame_num < 1:            #Hardcoded value indicating how many frames to let pass once the video begins
         frame_num += 1
         cv2.accumulateWeighted(window_mask,average,rate)
