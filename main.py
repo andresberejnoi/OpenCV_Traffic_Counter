@@ -7,7 +7,7 @@ def CLI():
     Works better with .avi files.
     If no path or name is provided, the camera will be used instead.""")        #instead of using metavar='--path', just type '--path'. For some reason the metavar argument was causing problems
     parser.add_argument('-a','--minArea',type=int,help='The minimum area (in pixels) to draw a bounding box',
-                        default=120)
+                        default=200)
     parser.add_argument('-d','--direction', type=str,default=['H','0.5'],nargs=2,help="""A character: H or V
     representing the orientation of the count line. H is horizontal, V is vertical.
     If not provided, the default is horizontal. The second parameter
