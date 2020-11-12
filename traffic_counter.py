@@ -56,7 +56,7 @@ class TrafficCounter(object):
     def _create_collage_frame(self):
         total_width  = self._vid_width  * 2
         total_height = self._vid_height * 2
-        collage_frame = np.zeros((total_height,total_width,3))
+        collage_frame = np.zeros((total_height,total_width,3),dtype=np.uint8)
         return collage_frame
 
     def _compute_frame_dimensions(self):
