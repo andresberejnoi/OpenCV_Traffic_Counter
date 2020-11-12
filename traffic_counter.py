@@ -10,7 +10,7 @@ class TrafficCounter(object):
                  line_direction='H',
                  line_position=0.5,
                  video_width = 640,
-                 min_area = 1000,
+                 min_area = 200,
                  video_out=False,
                  numCnts=10):
         self.crop_rect         = []         #stores the click coordinates where to crop the frame
@@ -36,6 +36,7 @@ class TrafficCounter(object):
 
         self._compute_frame_dimensions()
         self._set_up_line(line_direction,line_position)
+        self.collage_frame = self._create_collage_frame()
 
     def _set_video_writers(self):
         pass
@@ -51,7 +52,13 @@ class TrafficCounter(object):
             self.p2_count_line = (fract,self._vid_height)
         else:
             raise ValueError('Expected an "H" or a "V" only for line direction')
-    
+
+    def _create_collage_frame(self):
+        total_width  = self._vid_width  * 2
+        total_height = self._vid_height * 2
+        collage_frame = np.zeros((total_height,total_width,3))
+        return collage_frame
+
     def _compute_frame_dimensions(self):
         grabbed,img = self.video_source.read()
         while not grabbed:
@@ -170,6 +177,36 @@ class TrafficCounter(object):
 
         self.raw_avg = cv2.resize(self.raw_avg, (self._vid_width,self._vid_height))
 
+    def make_collage_of_four(self,up_left_img,up_right_img,down_left_img,down_right_img):
+        middle_width  = self._vid_width
+        middle_height = self._vid_height
+        total_height  = self.collage_frame.shape[0]
+        total_width   = self.collage_frame.shape[1]
+        #print(f"Collage shape: {self.collage_frame.shape}")
+        if len(up_left_img.shape) < 3:
+            up_l = cv2.cvtColor(up_left_img,cv2.COLOR_GRAY2BGR)
+        else:
+            up_l = up_left_img
+        
+        if len(up_right_img.shape) < 3:
+            up_r = cv2.cvtColor(up_right_img,cv2.COLOR_GRAY2BGR)
+        else:
+            up_r = up_right_img
+
+        if len(down_left_img.shape) < 3:
+            down_l = cv2.cvtColor(down_left_img,cv2.COLOR_GRAY2BGR)
+        else:
+            down_l = down_left_img
+
+        if len(down_right_img.shape) < 3:
+            down_r = cv2.cvtColor(down_right_img,cv2.COLOR_GRAY2BGR)
+        else:
+            down_r = down_right_img
+
+        self.collage_frame[0:middle_height,0:middle_width]                      = up_l    #setting up_left image
+        self.collage_frame[0:middle_height,middle_width:total_width]            = up_r 
+        self.collage_frame[middle_height:total_height,0:middle_width]           = down_l
+        self.collage_frame[middle_height:total_height,middle_width:total_width] = down_r
 
     def main_loop(self):
         self._set_up_masks()
@@ -224,7 +261,11 @@ class TrafficCounter(object):
             cv2.imshow('Background-Subtracted',subtracted_img)  #subtracted_img is the frame after the background has been subtracted from it
             cv2.imshow('Threshold Applied',dilated_img)         #dilated_img is threshold_img plus the noise reduction functions
             cv2.imshow('Running Avg of Background',background_avg)
+            cv2.line(img,self.p1_count_line,self.p2_count_line,(0,0,255),1)   #counting line
             cv2.imshow('Motion Detection',img)
+
+            self.make_collage_of_four(subtracted_img,background_avg,dilated_img,img)
+            cv2.imshow('Traffic Counter',self.collage_frame)
 
             ##-------Termination Conditions
             k = cv2.waitKey(25) & 0xFF
@@ -237,6 +278,7 @@ class TrafficCounter(object):
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_threshold_applied.jpeg"),dilated_img)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_background_average.jpeg"),background_avg)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_car_counting.jpeg"),img)
+                cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_collage.jpeg"),self.collage_frame)
 
         self.video_source.release()
         cv2.destroyAllWindows()
