@@ -14,25 +14,20 @@ The project was recently updated to use Python 3.8 and OpenCV 4.4.0.
 You can check the paper report or the blog posts I made at the time to get a better idea about the motivation for the project.
 
 ## Interface
-
-The script is very simple. At the beginning, you run the script and indicate a filename of a video to operate. If there is a default camera in the system, for example a web cam on a laptop, you don't need to specify a path if you want to use that feed. Just keep in mind that the program is mainly designed for cars on the road.
-
-A simple terminal command to test the script with a video file is:
+I have updated the project and moved away from the original script. In the new one, the computer vision parts are handled in a class TrafficCoutner in traffic_counter.py. To run the script, you must run main.py with a combination of parameters. For example:
 
 ```sh
-python trafficCounter.py -p <path_to_your_video> 
+python main.py -p <path_to_your_video> -d V 0.5 
 ```
+
+The `-p` parameter indicates a path to the video to be analyzed. `-d` is to indicate direction and position of the counting line. A `V` parameter is for a vertical line, expecting that cars are moving horizontally. The float 0.5 after `V` is the position of the line in the screen.
 
 There are other parameters that can be modified, but as of now, I have not included a way to change them once the script starts. 
 
-Once the script starts, it will take the first frame of the video and display it. The user must select 4 points on the image to crop it to that size and press q to continue. If you want to use the entire space, then press the enter key and it should continue.
-
-Next, the script will show the cropped image and you can select several points on the screen to create a mask of any shape. The system will only be able to see what is inside that shape. For example:
+Once the script runs, a frame from the video will be displayed and you can click on several points on the frame to select an area of interest to calculate. Everything outside the selected area will be ignored. To proceed to the next part, press `q` or `enter` on the keyboard.
 
 ![Initial cropping](./screenshots/roi_mask_1207.0.jpeg)
 ![after applying mask](./screenshots/screenshot_1207.0.jpeg)
-
-As you can see, the first image was cropped in a square. The second image shows the result of applying a mask of several points over the image. 
 
 ## Blog Post
 
