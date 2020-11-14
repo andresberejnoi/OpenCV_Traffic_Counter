@@ -282,24 +282,3 @@ class TrafficCounter(object):
 
         self.video_source.release()
         cv2.destroyAllWindows()
-
-    def start_counting(self):
-        
-        if k == ord('s') or k == ord('S'):            #if the letter s/S is pressed, a screenshot of the current frame on each window will be saved to the current folder
-            frame_id = cap.get(1)
-            cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_screenshot.jpeg"),img2)
-            cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_win_mask.jpeg"),window_mask)
-            cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_roi_mask.jpeg"),roi_mask)
-            cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_res.jpeg"),result)
-            cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_dimg.jpeg"),dimg2)
-            cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_thresh.jpeg"),thresh)
-            cv2.imwrite(os.path.join(screenshot_folder,f"{frame_id}_fmask.jpeg"),fmask)
-            
-        if video_out:
-            screenshot_out.write(img2)
-            win_mask_out.write(window_mask)
-            roi_mask_out.write(roi_mask)
-            res_mask_out.write(result)
-            dimg_mask_out.write(dimg2)
-            thresh_mask_out.write(thresh)
-            fmask_out.write(fmask)
