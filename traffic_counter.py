@@ -108,7 +108,7 @@ class TrafficCounter(object):
         cur_centroids  = []
         prev_centroids = []
         for c in cnts:
-            if cv2.contourArea(c) < self.minArea:
+            if cv2.contourArea(c) < self.minArea:           #ignore contours that are smaller than this area
                 continue
             rect = cv2.minAreaRect(c)
             points = cv2.boxPoints(rect)                # This is the way to do it in opencv 3.1
