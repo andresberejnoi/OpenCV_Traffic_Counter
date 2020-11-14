@@ -34,7 +34,13 @@ def main(args):
     min_area       = int(args.minArea)
     video_out      = False
     numCnts        = int(args.numCount)
-    tc = TrafficCounter(video_source,line_direction,line_position,video_width,min_area,video_out,numCnts)
+    tc = TrafficCounter(video_source,
+                        line_direction,
+                        line_position,
+                        video_width,
+                        min_area,
+                        video_out,
+                        numCnts)
 
     tc.main_loop()
 
