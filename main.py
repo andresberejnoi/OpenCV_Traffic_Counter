@@ -32,7 +32,7 @@ def main(args):
     line_position  = float(args.direction[1])
     video_width    = args.video_width
     min_area       = int(args.minArea)
-    video_out      = False
+    video_out      = args.video_out
     numCnts        = int(args.numCount)
     tc = TrafficCounter(video_source,
                         line_direction,

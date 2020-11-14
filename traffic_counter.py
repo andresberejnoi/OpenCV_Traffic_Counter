@@ -11,7 +11,7 @@ class TrafficCounter(object):
                  line_position=0.5,
                  video_width = 640,
                  min_area = 200,
-                 video_out=False,
+                 video_out='',
                  numCnts=10):
         self.crop_rect         = []         #stores the click coordinates where to crop the frame
         self.mask_points       = []         #stores the click coordinates of the mask to apply to cropped frame
@@ -30,7 +30,13 @@ class TrafficCounter(object):
         self._vid_width        = video_width       
         self._vid_height       = None        #PLACEHOLDER
         self.black_mask        = None        #PLACEHOLDER, user creates it by clicking on several points
-        self.video_out         = video_out       
+        
+        if len(video_out) < 1:
+            self.video_out = False 
+        else:
+            self.video_out = True 
+            self._out_vid_base_name = video_out
+
         if video_out:
             self._set_video_writers()
 
@@ -279,6 +285,9 @@ class TrafficCounter(object):
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_background_average.jpeg"),background_avg)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_car_counting.jpeg"),img)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_collage.jpeg"),self.collage_frame)
+
+            if self.video_out:
+
 
         self.video_source.release()
         cv2.destroyAllWindows()
