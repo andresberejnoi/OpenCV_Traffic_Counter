@@ -48,20 +48,24 @@ class TrafficCounter(object):
         self.collage_frame = self._create_collage_frame()
 
     def _set_video_writers(self):
-        fps    = self.video_source.get(cv2.CAP_PROP_FPS)
-        video_format = self.out_video_params.get('extension','avi')
+        fps           = self.video_source.get(cv2.CAP_PROP_FPS)
+        video_ext     = self.out_video_params.get('extension','avi')
         string_fourcc = self.out_video_params.get('codec','mjpg')
-        fourcc = cv2.VideoWriter_fourcc(*string_fourcc)
-        video_format = None
-
+        fourcc        = cv2.VideoWriter_fourcc(*string_fourcc)
         
-        out_bg_subtracted  = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_subtracted'  + '.' + video_format))
-        out_threshold      = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_threshold'      + '.' + video_format))
-        out_bg_average     = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_average'     + '.' + video_format))
-        out_bounding_boxes = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bounding_boxes' + '.' + video_format))
-        out_collage        = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_collage'        + '.' + video_format))
+        self.out_bg_subtracted  = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_subtracted'  + '.' + video_ext))
+        self.out_threshold      = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_threshold'      + '.' + video_ext))
+        self.out_bg_average     = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_average'     + '.' + video_ext))
+        self.out_bounding_boxes = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bounding_boxes' + '.' + video_ext))
+        self.out_collage        = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_collage'        + '.' + video_ext))
 
-        
+    def _release_video_writers(self):
+        self.out_bg_subtracted.release()
+        self.out_threshold.release()
+        self.out_bg_average.release()
+        self.out_bounding_boxes.release()
+        self.out_collage.release()
+
     def _set_up_line(self,line_direction,line_position):
         if line_direction.upper()=='H' or line_direction is None:
             fract = int(self._vid_height*float(line_position))
@@ -302,11 +306,13 @@ class TrafficCounter(object):
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_collage.jpeg"),self.collage_frame)
 
             if self.video_out:
-                out_bg_subtracted.write(subtracted_img)
-                out_threshold.write(dilated_img)
-                out_bg_average.write(background_avg)
-                out_bounding_boxes.write(img)
-                out_collage.write(self.collage_frame)
+                self.out_bg_subtracted.write(subtracted_img)
+                self.out_threshold.write(dilated_img)
+                self.out_bg_average.write(background_avg)
+                self.out_bounding_boxes.write(img)
+                self.out_collage.write(self.collage_frame)
 
         self.video_source.release()
+        if self.video_out:
+            self._release_video_writers()
         cv2.destroyAllWindows()
