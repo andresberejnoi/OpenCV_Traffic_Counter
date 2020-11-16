@@ -52,12 +52,18 @@ class TrafficCounter(object):
         video_ext     = self.out_video_params.get('extension','avi')
         string_fourcc = self.out_video_params.get('codec','mjpg')
         fourcc        = cv2.VideoWriter_fourcc(*string_fourcc)
+        video_res     = (self._vid_width,self._vid_height)
         
-        self.out_bg_subtracted  = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_subtracted'  + '.' + video_ext))
-        self.out_threshold      = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_threshold'      + '.' + video_ext))
-        self.out_bg_average     = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_average'     + '.' + video_ext))
-        self.out_bounding_boxes = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bounding_boxes' + '.' + video_ext))
-        self.out_collage        = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_collage'        + '.' + video_ext))
+        self.out_bg_subtracted  = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_subtracted'  + '.' + video_ext),
+                                                  fourcc,fps,video_res)
+        self.out_threshold      = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_threshold'      + '.' + video_ext),
+                                                  fourcc,fps,video_res)
+        self.out_bg_average     = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_average'     + '.' + video_ext),
+                                                  fourcc,fps,video_res)
+        self.out_bounding_boxes = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bounding_boxes' + '.' + video_ext),
+                                                  fourcc,fps,video_res)
+        self.out_collage        = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_collage'        + '.' + video_ext),
+                                                  fourcc,fps,video_res)
 
     def _release_video_writers(self):
         self.out_bg_subtracted.release()
