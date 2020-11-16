@@ -16,8 +16,9 @@ def CLI():
     parser.add_argument('-n','--numCount',type=int,default=10,help="""The number of contours to be detected by the program.""")
     parser.add_argument('-w','--webcam',type=int,nargs='+',help="""Allows the user to specify which to use as the video source""")
     parser.add_argument('--rgb',action='store_true',help="Boolean flag to use rbg colors. Default is to use grayscale")
-    parser.add_argument('-v','--video_out',type=str,default="",help="Provide a video filename to output")
+    parser.add_argument('-vo','--video_out',type=str,default="",help="Provide a video filename to output")
     parser.add_argument('--video_width',type=int,default=640,help="Videos will be resized to this width. Height will be computed automatically to preserve aspect ratio")
+    parser.add_argument('-vp','--video_params',type=str,default=['mjpg','avi'],nargs=2,help="Provide video codec and extension (in that order) for the output video. Example: `--video_params mjpg avi`. Default values are mjpg and avi")
     args = parser.parse_args()
     return args
 
@@ -26,6 +27,17 @@ def get_video_source(video_name):
         x = int(video_name)
     except:
         x = 5
+
+def make_video_params_dict(video_params):
+    codec     = video_params[0]
+    extension = video_params[1]
+    
+    params_dict = {
+        'codec'    :codec,
+        'extension':extension,
+    }
+    return params_dict
+
 def main(args):
     video_source   = args.path
     line_direction = args.direction[0]
@@ -34,13 +46,15 @@ def main(args):
     min_area       = int(args.minArea)
     video_out      = args.video_out
     numCnts        = int(args.numCount)
+    video_params   = make_video_params_dict(args.video_params)
     tc = TrafficCounter(video_source,
                         line_direction,
                         line_position,
                         video_width,
                         min_area,
                         video_out,
-                        numCnts)
+                        numCnts,
+                        video_params)
 
     tc.main_loop()
 
