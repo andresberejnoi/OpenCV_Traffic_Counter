@@ -12,7 +12,8 @@ class TrafficCounter(object):
                  video_width = 640,
                  min_area = 200,
                  video_out='',
-                 numCnts=10):
+                 numCnts=10,
+                 out_video_params={},):
         self.crop_rect         = []         #stores the click coordinates where to crop the frame
         self.mask_points       = []         #stores the click coordinates of the mask to apply to cropped frame
         self.font              = cv2.FONT_HERSHEY_SIMPLEX
@@ -31,11 +32,13 @@ class TrafficCounter(object):
         self._vid_height       = None        #PLACEHOLDER
         self.black_mask        = None        #PLACEHOLDER, user creates it by clicking on several points
         
+        self.out_video_params  = out_video_params
         if len(video_out) < 1:
             self.video_out = False 
         else:
             self.video_out = True 
             self._out_vid_base_name = video_out
+            self._set_video_writers()
 
         if video_out:
             self._set_video_writers()
@@ -45,7 +48,19 @@ class TrafficCounter(object):
         self.collage_frame = self._create_collage_frame()
 
     def _set_video_writers(self):
-        pass
+        fps    = self.video_source.get(cv2.CAP_PROP_FPS)
+        video_format = self.out_video_params.get('extension','avi')
+        string_fourcc = self.out_video_params.get('codec','mjpg')
+        fourcc = cv2.VideoWriter_fourcc(*string_fourcc)
+        video_format = None
+
+        
+        out_bg_subtracted  = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_subtracted'  + '.' + video_format))
+        out_threshold      = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_threshold'      + '.' + video_format))
+        out_bg_average     = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_average'     + '.' + video_format))
+        out_bounding_boxes = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bounding_boxes' + '.' + video_format))
+        out_collage        = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_collage'        + '.' + video_format))
+
         
     def _set_up_line(self,line_direction,line_position):
         if line_direction.upper()=='H' or line_direction is None:
@@ -287,7 +302,11 @@ class TrafficCounter(object):
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_collage.jpeg"),self.collage_frame)
 
             if self.video_out:
-
+                out_bg_subtracted.write(subtracted_img)
+                out_threshold.write(dilated_img)
+                out_bg_average.write(background_avg)
+                out_bounding_boxes.write(img)
+                out_collage.write(self.collage_frame)
 
         self.video_source.release()
         cv2.destroyAllWindows()
