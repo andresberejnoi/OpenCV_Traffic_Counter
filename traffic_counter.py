@@ -32,6 +32,12 @@ class TrafficCounter(object):
         self._vid_height       = None        #PLACEHOLDER
         self.black_mask        = None        #PLACEHOLDER, user creates it by clicking on several points
         
+        #--Getting frame dimensions 
+        self._compute_frame_dimensions()
+        self._set_up_line(line_direction,line_position)
+        self.collage_frame = self._create_collage_frame()
+
+        #---Seting up video writers for output
         self.out_video_params  = out_video_params
         if len(video_out) < 1:
             self.video_out = False 
@@ -40,12 +46,7 @@ class TrafficCounter(object):
             self._out_vid_base_name = video_out
             self._set_video_writers()
 
-        if video_out:
-            self._set_video_writers()
-
-        self._compute_frame_dimensions()
-        self._set_up_line(line_direction,line_position)
-        self.collage_frame = self._create_collage_frame()
+        
 
     def _set_video_writers(self):
         fps           = self.video_source.get(cv2.CAP_PROP_FPS)
@@ -53,6 +54,9 @@ class TrafficCounter(object):
         string_fourcc = self.out_video_params.get('codec','mjpg')
         fourcc        = cv2.VideoWriter_fourcc(*string_fourcc)
         video_res     = (self._vid_width,self._vid_height)
+        collage_res   = (self.collage_width,self.collage_height)
+
+        print(f"Video Writer Params:\nFPS -> {fps}\nFOURCC -> {fourcc}\nVideo res -> {video_res}")
         
         self.out_bg_subtracted  = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_subtracted'  + '.' + video_ext),
                                                   fourcc,fps,video_res)
@@ -63,7 +67,7 @@ class TrafficCounter(object):
         self.out_bounding_boxes = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bounding_boxes' + '.' + video_ext),
                                                   fourcc,fps,video_res)
         self.out_collage        = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_collage'        + '.' + video_ext),
-                                                  fourcc,fps,video_res)
+                                                  fourcc,fps,collage_res)
 
     def _release_video_writers(self):
         self.out_bg_subtracted.release()
@@ -85,9 +89,9 @@ class TrafficCounter(object):
             raise ValueError('Expected an "H" or a "V" only for line direction')
 
     def _create_collage_frame(self):
-        total_width  = self._vid_width  * 2
-        total_height = self._vid_height * 2
-        collage_frame = np.zeros((total_height,total_width,3),dtype=np.uint8)
+        self.collage_width  = self._vid_width  * 2
+        self.collage_height = self._vid_height * 2
+        collage_frame = np.zeros((self.collage_height,self.collage_width,3),dtype=np.uint8)
         return collage_frame
 
     def _compute_frame_dimensions(self):
