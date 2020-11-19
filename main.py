@@ -22,12 +22,6 @@ def CLI():
     args = parser.parse_args()
     return args
 
-def get_video_source(video_name):
-    try:
-        x = int(video_name)
-    except:
-        x = 5
-
 def make_video_params_dict(video_params):
     codec     = video_params[0]
     extension = video_params[1]
