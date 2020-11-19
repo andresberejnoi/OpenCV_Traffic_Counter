@@ -17,7 +17,7 @@ def CLI():
     parser.add_argument('-w','--webcam',type=int,nargs='+',help="""Allows the user to specify which to use as the video source""")
     parser.add_argument('--rgb',action='store_true',help="Boolean flag to use rbg colors. Default is to use grayscale")
     parser.add_argument('-vo','--video_out',type=str,default="",help="Provide a video filename to output")
-    parser.add_argument('--video_width',type=int,default=640,help="Videos will be resized to this width. Height will be computed automatically to preserve aspect ratio")
+    parser.add_argument('-vw','--video_width',type=int,default=640,help="Videos will be resized to this width. Height will be computed automatically to preserve aspect ratio")
     parser.add_argument('-vp','--video_params',type=str,default=['mjpg','avi'],nargs=2,help="Provide video codec and extension (in that order) for the output video. Example: `--video_params mjpg avi`. Default values are mjpg and avi")
     args = parser.parse_args()
     return args
