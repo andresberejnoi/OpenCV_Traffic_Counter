@@ -56,7 +56,7 @@ class TrafficCounter(object):
         video_res     = (self._vid_width,self._vid_height)
         collage_res   = (self.collage_width,self.collage_height)
 
-        print(f"Video Writer Params:\nFPS -> {fps}\nFOURCC -> {fourcc}\nVideo res -> {video_res}")
+        #print(f"Video Writer Params:\nFPS -> {fps}\nFOURCC -> {fourcc}\nVideo res -> {video_res}")
         
         self.out_bg_subtracted  = cv2.VideoWriter(os.path.join(self.video_out_folder,self._out_vid_base_name + '_bg_subtracted'  + '.' + video_ext),
                                                   fourcc,fps,video_res)
