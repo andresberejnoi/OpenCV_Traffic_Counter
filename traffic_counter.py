@@ -159,8 +159,10 @@ class TrafficCounter(object):
             cur_centroids.append((cx,cy))
 
             #Finding the centroid of c in the previous frame
-            if len(prev_centroids)==0: prev_cx,prev_cy = cx,cy
-            elif len(cnts)==0: prev_cx,prev_cy = cx,cy
+            if len(prev_centroids)==0: 
+                prev_cx,prev_cy = cx,cy
+            #elif len(cnts)==0: 
+            #    prev_cx,prev_cy = cx,cy
             else:
                 minPoint = None
                 minDist = None
@@ -170,9 +172,10 @@ class TrafficCounter(object):
                         minDist = dist
                         minPoint = prev_centroids[i]
                 #This if is meant to reduce overcounting errors
-                if not minDist >= w/2:
-                    prev_cx,prev_cy = minPoint
-                else: prev_cx,prev_cy = cx,cy
+                #if minDist < w/2:
+                #    prev_cx,prev_cy = minPoint
+                #else: prev_cx,prev_cy = cx,cy
+                prev_cx,prev_cy = minPoint
             
             _is_crossed = self._is_line_crossed(frame,cx,cy,prev_cx,prev_cy)
             if _is_crossed:
