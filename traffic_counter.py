@@ -256,6 +256,7 @@ class TrafficCounter(object):
             if not grabbed:
                 break
             #--------------
+            frame_id = int(self.video_source.get(1))        #get current frame index
             img = cv2.resize(img,(self._vid_width,self._vid_height))
             img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
             if FRAME_CROPPED:
@@ -303,6 +304,7 @@ class TrafficCounter(object):
             cv2.imshow('Motion Detection',img)
 
             self.make_collage_of_four(subtracted_img,background_avg,dilated_img,img)
+            cv2.putText(self.collage_frame,str(frame_id),(15,self.collage_height-15),self.font,1,(255,255,255),3)
             cv2.imshow('Traffic Counter',self.collage_frame)
 
             ##-------Termination Conditions
@@ -310,13 +312,16 @@ class TrafficCounter(object):
             if k == 27 or k == ord('q') or k == ord('Q'):
                 break
             elif k == ord('s') or k == ord('S'):                #if the letter s/S is pressed, a screenshot of the current frame on each window will be saved to the current folder
-                frame_id = int(self.video_source.get(1))        #get current frame index
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_masked_frame.jpeg"),working_img)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_background_subtracted.jpeg"),subtracted_img)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_threshold_applied.jpeg"),dilated_img)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_background_average.jpeg"),background_avg)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_car_counting.jpeg"),img)
                 cv2.imwrite(os.path.join(self.screenshot_folder,f"{frame_id}_collage.jpeg"),self.collage_frame)
+            if k == ord(' '):   #if spacebar is pressed
+                paused_key = cv2.waitKey(0) & 0xFF       #program is paused for a while
+                if paused_key == ord(' '):    #pressing space again unpauses the program
+                    pass
 
             if self.video_out:
                 self.out_bg_subtracted.write(subtracted_img)
