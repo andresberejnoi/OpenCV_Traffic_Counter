@@ -32,6 +32,8 @@ class TrafficCounter(object):
         self._vid_height       = None        #PLACEHOLDER
         self.black_mask        = None        #PLACEHOLDER, user creates it by clicking on several points
         
+        self.prev_centroids    = []          #this will contain the coordinates of the centers in the previos
+
         #--Getting frame dimensions 
         self._compute_frame_dimensions()
         self._set_up_line(line_direction,line_position)
@@ -112,11 +114,13 @@ class TrafficCounter(object):
     
     def _draw_bounding_boxes(self,frame,contour_id,bounding_points,cx,cy,prev_cx,prev_cy):
         cv2.drawContours(frame,[bounding_points],0,(0,255,0),1)
-        cv2.line(frame,(prev_cx,prev_cy),(cx,cy),(0,0,255),1)         #line between last position and current position
+        cv2.line(frame,(prev_cx,prev_cy),(cx,cy),(0,0,255),1)          #line between last position and current position
         cv2.circle(frame,(cx,cy),3,(0,0,255),4)
         cv2.putText(frame,str(contour_id),(cx,cy-15),self.font,0.4,(255,0,0),2)
 
     def _is_line_crossed(self,frame,cx,cy,prev_cx,prev_cy):
+        print(f"current center: {(cx,cy)}")
+        print(f"prev    center: {(prev_cx,prev_cy)}")
         is_crossed = False
         if self.line_direction.upper() == 'H':
             if (prev_cy <= self.p1_count_line[1] <= cy) or (cy <= self.p1_count_line[1] <= prev_cy):
@@ -139,13 +143,12 @@ class TrafficCounter(object):
         cnts,_ = cv2.findContours(thresh_img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)                #this line is for opencv 2.4, and also now for OpenCV 4.4, so this is the current one
         cnts = sorted(cnts,key = cv2.contourArea,reverse=True)[:self.numCnts]
 
-        cnt_id          = 1
+        cnt_id         = 1
         cur_centroids  = []
-        prev_centroids = []
         for c in cnts:
             if cv2.contourArea(c) < self.minArea:           #ignore contours that are smaller than this area
                 continue
-            rect = cv2.minAreaRect(c)
+            rect   = cv2.minAreaRect(c)
             points = cv2.boxPoints(rect)                # This is the way to do it in opencv 3.1
             points = np.int0(points)
 
@@ -159,18 +162,20 @@ class TrafficCounter(object):
             cur_centroids.append((cx,cy))
 
             #Finding the centroid of c in the previous frame
-            if len(prev_centroids)==0: 
+            if len(self.prev_centroids)==0: 
                 prev_cx,prev_cy = cx,cy
-            #elif len(cnts)==0: 
-            #    prev_cx,prev_cy = cx,cy
+                print("prev_centroids empty...")
+            elif len(cnts)==0: 
+                prev_cx,prev_cy = cx,cy
             else:
                 minPoint = None
                 minDist = None
-                for i in range(len(prev_centroids)):
-                    dist = np.linalg.norm(C - prev_centroids[i])                #numpy's way to find the euclidean distance between two points
+                for i in range(len(self.prev_centroids)):
+                    dist = np.linalg.norm(C - self.prev_centroids[i])                #numpy's way to find the euclidean distance between two points
                     if (minDist is None) or (dist < minDist):
+                        print("minDist is None or dist < minDist")
                         minDist = dist
-                        minPoint = prev_centroids[i]
+                        minPoint = self.prev_centroids[i]
                 #This if is meant to reduce overcounting errors
                 #if minDist < w/2:
                 #    prev_cx,prev_cy = minPoint
@@ -183,7 +188,7 @@ class TrafficCounter(object):
             self._draw_bounding_boxes(frame,cnt_id,points,cx,cy,prev_cx,prev_cy)
 
             cnt_id += 1
-        prev_centroids = cur_centroids       #updating centroids for next frame
+        self.prev_centroids = cur_centroids       #updating centroids for next frame
 
     def _set_up_masks(self):
         grabbed,img = self.video_source.read()
