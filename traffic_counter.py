@@ -13,7 +13,8 @@ class TrafficCounter(object):
                  min_area = 200,
                  video_out='',
                  numCnts=10,
-                 out_video_params={},):
+                 out_video_params={},
+                 starting_frame=10,):
         self.crop_rect         = []         #stores the click coordinates where to crop the frame
         self.mask_points       = []         #stores the click coordinates of the mask to apply to cropped frame
         self.font              = cv2.FONT_HERSHEY_SIMPLEX
@@ -24,6 +25,7 @@ class TrafficCounter(object):
         self.line_position     = line_position       
         self.minArea           = min_area        
         self.numCnts           = numCnts
+        self.starting_frame    = starting_frame
         self.video_source      = cv2.VideoCapture(video_source)    
         self.screenshot_folder = '_screenshots'
         self.video_out_folder  = '_videos'
@@ -254,7 +256,6 @@ class TrafficCounter(object):
     def main_loop(self):
         self._set_up_masks()
         rate_of_influence = 0.01
-        frame_num = 0
         FRAME_CROPPED = False
         while True:
             grabbed,img = self.video_source.read()
@@ -271,8 +272,7 @@ class TrafficCounter(object):
             if self.black_mask is not None:
                 working_img = cv2.bitwise_and(working_img,self.black_mask)
 
-            if frame_num < 1:           #Hardcoded value indicating how many frames to let pass once the video begins
-                frame_num += 1
+            if frame_id < self.starting_frame:
                 cv2.accumulateWeighted(working_img,self.raw_avg,rate_of_influence)
                 continue
             
