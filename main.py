@@ -19,7 +19,7 @@ def CLI():
     parser.add_argument('-vo','--video_out',type=str,default="",help="Provide a video filename to output")
     parser.add_argument('-vw','--video_width',type=int,default=640,help="Videos will be resized to this width. Height will be computed automatically to preserve aspect ratio")
     parser.add_argument('-vp','--video_params',type=str,default=['mjpg','avi'],nargs=2,help="Provide video codec and extension (in that order) for the output video. Example: `--video_params mjpg avi`. Default values are mjpg and avi")
-    parser.add_argument('-sf','--starting_frame',type=int,default=10,help="Select the starting frame for video analysis")
+    parser.add_argument('-sf','--starting_frame',type=int,default=10,help="Select the starting frame for video analysis. All frames before that will still be used for the background average")
     args = parser.parse_args()
     return args
 
