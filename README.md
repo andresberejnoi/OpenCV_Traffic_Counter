@@ -1,7 +1,9 @@
 # Traffic Counter
 
-![car counting](./screenshots/177.0_screenshot.jpeg)
-![car counting](./screenshots/177.0_thresh.jpeg)
+![car counting](./screenshots/316_car_counting.jpeg)
+![car counting](./screenshots/316_threshold_applied.jpeg)
+
+![Collage image](./screenshots/316_collage.jpeg)
 
 This is the result of my undergraduate summer of research (2015) for the computer science department at Berea College. The OpenCV library is used to detect moving objects in a video feed by background subtraction and edge detection. 
 
@@ -9,9 +11,26 @@ No machine learning or fancy AI is being done here. This was mainly to keep the 
 
 The system counts counts the number of cars passing the road. The project was developed on the original Raspberry Pi and therefore it needed to be fast to run. However, a faster device is recommended. 
 
-The project was recently updated to use Python 3.8 and OpenCV 4.4.0.
+The project was recently updated to use Python 3.7.8 and OpenCV 4.4.0.
 
-You can check the paper report or the blog posts I made at the time to get a better idea about the motivation for the project.
+You can check the paper report or the blog posts (links at the bottom) I made at the time to get a better idea about the motivation for the project.
+
+## How to Set Up
+The `requirements.txt` file contains the required libraries to run the script. It also contains other libraries like Jupyter notebook which is not really necessary. The main libraries and configurations needed are the following:
+
+```
+Python version: 3.7.8
+
+OpenCV  4.4.0
+Numpy   1.19.1
+imutils 0.5.3
+```
+
+Installing OpenCV might be tricky depending on the system. Create a conda environment and install it in there. Maybe try running the command
+
+```sh
+conda install -c menpo opencv
+```
 
 ## How to Use
 There are several command line arguments that can given to the script. The information here might be outdated, so the safest way to check the available commands is by running:
@@ -23,6 +42,11 @@ python main.py --help
 Which will return something like:
 
 ```
+usage: main.py [-h] [-p PATH] [-a MINAREA] [-d DIRECTION DIRECTION]
+               [-n NUMCOUNT] [-w WEBCAM [WEBCAM ...]] [--rgb] [-vo VIDEO_OUT]
+               [-vw VIDEO_WIDTH] [-vp VIDEO_PARAMS VIDEO_PARAMS]
+               [-sf STARTING_FRAME]
+
 Finds the contours on a video file
 
 optional arguments:
@@ -32,14 +56,16 @@ optional arguments:
                         be used instead.
   -a MINAREA, --minArea MINAREA
                         The minimum area (in pixels) to draw a bounding box
+                        (default is 200)
   -d DIRECTION DIRECTION, --direction DIRECTION DIRECTION
                         A character: H or V representing the orientation of
                         the count line. H is horizontal, V is vertical. If not
-                        provided, the default is horizontal. The second
-                        parameter is a float number from 0 to 1 indicating the
-                        place at which the line should be drawn.
+                        provided, the default is H,0.5. The second parameter
+                        is a float number from 0 to 1 indicating the place at
+                        which the line should be drawn.
   -n NUMCOUNT, --numCount NUMCOUNT
-                        The number of contours to be detected by the program.
+                        The number of contours to be detected by the program
+                        (default is 10).
   -w WEBCAM [WEBCAM ...], --webcam WEBCAM [WEBCAM ...]
                         Allows the user to specify which to use as the video
                         source
@@ -47,12 +73,13 @@ optional arguments:
   -vo VIDEO_OUT, --video_out VIDEO_OUT
                         Provide a video filename to output
   -vw VIDEO_WIDTH, --video_width VIDEO_WIDTH
-                        Videos will be resized to this width. Height will be
-                        computed automatically to preserve aspect ratio
+                        Videos will be resized to this width (default is 640).
+                        Height will be computed automatically to preserve
+                        aspect ratio
   -vp VIDEO_PARAMS VIDEO_PARAMS, --video_params VIDEO_PARAMS VIDEO_PARAMS
                         Provide video codec and extension (in that order) for
                         the output video. Example: `--video_params mjpg avi`.
-                        Default values are mjpg and avi
+                        Default values are mjpg avi
   -sf STARTING_FRAME, --starting_frame STARTING_FRAME
                         Select the starting frame for video analysis (default
                         is 10). All frames before that will still be used for
