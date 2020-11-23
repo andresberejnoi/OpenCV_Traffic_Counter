@@ -306,10 +306,13 @@ class TrafficCounter(object):
             cv2.imshow('Threshold Applied',dilated_img)         #dilated_img is threshold_img plus the noise reduction functions
             cv2.imshow('Running Avg of Background',background_avg)
             cv2.line(img,self.p1_count_line,self.p2_count_line,(0,0,255),1)   #counting line
+            
+            #cv2.putText(img,f"Total cars: {self.counter}",(15,self._vid_height-15),self.font,1,(0,0,0),7)
+            cv2.putText(img,f"Total cars: {self.counter}",(15,self._vid_height-15),self.font,1,(255,255,255),3)
             cv2.imshow('Motion Detection',img)
 
             self.make_collage_of_four(subtracted_img,background_avg,dilated_img,img)
-            cv2.putText(self.collage_frame,str(frame_id),(15,self.collage_height-15),self.font,1,(255,255,255),3)
+            cv2.putText(self.collage_frame,f"Frame: {frame_id}",(15,self.collage_height-15),self.font,1,(255,255,255),3)
             cv2.imshow('Traffic Counter',self.collage_frame)
 
             ##-------Termination Conditions
