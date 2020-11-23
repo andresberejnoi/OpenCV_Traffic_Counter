@@ -121,8 +121,8 @@ class TrafficCounter(object):
         cv2.putText(frame,str(contour_id),(cx,cy-15),self.font,0.4,(255,0,0),2)
 
     def _is_line_crossed(self,frame,cx,cy,prev_cx,prev_cy):
-        print(f"current center: {(cx,cy)}")
-        print(f"prev    center: {(prev_cx,prev_cy)}")
+        #print(f"current center: {(cx,cy)}")
+        #print(f"prev    center: {(prev_cx,prev_cy)}")
         is_crossed = False
         if self.line_direction.upper() == 'H':
             if (prev_cy <= self.p1_count_line[1] <= cy) or (cy <= self.p1_count_line[1] <= prev_cy):
@@ -166,7 +166,6 @@ class TrafficCounter(object):
             #Finding the centroid of c in the previous frame
             if len(self.prev_centroids)==0: 
                 prev_cx,prev_cy = cx,cy
-                print("prev_centroids empty...")
             elif len(cnts)==0: 
                 prev_cx,prev_cy = cx,cy
             else:
@@ -175,14 +174,14 @@ class TrafficCounter(object):
                 for i in range(len(self.prev_centroids)):
                     dist = np.linalg.norm(C - self.prev_centroids[i])                #numpy's way to find the euclidean distance between two points
                     if (minDist is None) or (dist < minDist):
-                        print("minDist is None or dist < minDist")
                         minDist = dist
                         minPoint = self.prev_centroids[i]
                 #This if is meant to reduce overcounting errors
-                #if minDist < w/2:
-                #    prev_cx,prev_cy = minPoint
-                #else: prev_cx,prev_cy = cx,cy
-                prev_cx,prev_cy = minPoint
+                if minDist < w/2:
+                    prev_cx,prev_cy = minPoint
+                else: 
+                    prev_cx,prev_cy = cx,cy
+                #prev_cx,prev_cy = minPoint
             
             _is_crossed = self._is_line_crossed(frame,cx,cy,prev_cx,prev_cy)
             if _is_crossed:
