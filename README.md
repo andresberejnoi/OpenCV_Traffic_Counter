@@ -84,14 +84,14 @@ Keep in mind that the default values for the file extension and video codec migh
 python main.py -p <path_to_your_video> -vo some_video_name -vp MJPG avi
 ```
 
+While the video windows are open, you can press `s` to save a screenshot at that particular frame. Pressing spacebar will pause the video (press spacebar again to resume).
+
 ## Interface
 I have updated the project and moved away from the original script. In the new one, the computer vision parts are handled in a class TrafficCoutner in traffic_counter.py. To run the script, you must run main.py with a combination of parameters. For example:
 
 ```sh
 python main.py -p <path_to_your_video> -d V 0.5 
 ```
-
-The `-p` parameter indicates a path to the video to be analyzed. `-d` is to indicate direction and position of the counting line. A `V` parameter is for a vertical line, expecting that cars are moving horizontally. The float 0.5 after `V` is the position of the line in the screen.
 
 There are other parameters that can be modified, but as of now, I have not included a way to change them once the script starts. 
 
