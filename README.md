@@ -142,6 +142,7 @@ A paper report of the work is also included in the repository:
 [PaperReport_traffic_counter.pdf](./PaperReport_traffic_counter.pdf)
 
 ## Other links
-I will be posting Python videos to my YouTube channel, among other projects. If you are interested in checking it out, here is the link:
+I created a nice YouTube video explaining the project. Watch it below:
+[Build a Traffic Counter With Python](https://youtu.be/_UGCBud63Eo)
 
-[Andres Berejnoi Channel](https://www.youtube.com/andresberejnoi)
+I encourage you to subscribe to the channel to get notified when I post about new projects.
