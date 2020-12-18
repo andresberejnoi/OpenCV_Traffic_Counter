@@ -143,6 +143,7 @@ A paper report of the work is also included in the repository:
 
 ## Other links
 I created a nice YouTube video explaining the project. Watch it below:
-[Build a Traffic Counter With Python](https://youtu.be/_UGCBud63Eo)
+
+- [Build a Traffic Counter With Python](https://youtu.be/_UGCBud63Eo)
 
 I encourage you to subscribe to the channel to get notified when I post about new projects.
