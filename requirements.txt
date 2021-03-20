@@ -14,7 +14,7 @@ ipython @ file:///tmp/build/80754af9/ipython_1598371569012/work
 ipython-genutils==0.2.0
 ipywidgets==7.5.1
 jedi @ file:///tmp/build/80754af9/jedi_1596490743326/work
-Jinja2==2.11.2
+Jinja2==2.11.3
 jsonschema @ file:///tmp/build/80754af9/jsonschema_1594363551272/work
 jupyter==1.0.0
 jupyter-client @ file:///tmp/build/80754af9/jupyter_client_1594826976318/work
