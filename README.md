@@ -9,11 +9,18 @@ This is the result of my undergraduate summer of research (2015) for the compute
 
 No machine learning or fancy AI is being done here. This was mainly to keep the processing requirements low.
 
-The system counts counts the number of cars passing the road. The project was developed on the original Raspberry Pi and therefore it needed to be fast to run. However, a faster device is recommended. 
+The system counts the number of cars passing the road. The project was developed on the original Raspberry Pi and therefore it needed to be fast to run. However, a faster device is recommended. 
 
 The project was recently updated to use Python 3.7.8 and OpenCV 4.4.0.
 
 You can check the paper report or the blog posts (links at the bottom) I made at the time to get a better idea about the motivation for the project.
+
+## Youtube
+I created a nice YouTube video explaining the project. Watch it below:
+
+- [Build a Traffic Counter With Python](https://youtu.be/_UGCBud63Eo)
+
+I encourage you to subscribe to the channel to get notified when I post about new projects.
 
 ## How to Set Up
 The `requirements.txt` file contains the required libraries to run the script. It also contains other libraries like Jupyter notebook which is not really necessary. The main libraries and configurations needed are the following:
@@ -141,9 +148,4 @@ A paper report of the work is also included in the repository:
 
 [PaperReport_traffic_counter.pdf](./PaperReport_traffic_counter.pdf)
 
-## Other links
-I created a nice YouTube video explaining the project. Watch it below:
 
-- [Build a Traffic Counter With Python](https://youtu.be/_UGCBud63Eo)
-
-I encourage you to subscribe to the channel to get notified when I post about new projects.
