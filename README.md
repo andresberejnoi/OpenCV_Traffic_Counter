@@ -16,11 +16,16 @@ The project was recently updated to use Python 3.7.8 and OpenCV 4.4.0.
 You can check the paper report or the blog posts (links at the bottom) I made at the time to get a better idea about the motivation for the project.
 
 ## Youtube
-I created a nice YouTube video explaining the project. Watch it below:
+I created a nice YouTube video explaining the project. You can watch it below:
 
 - [Build a Traffic Counter With Python](https://youtu.be/_UGCBud63Eo)
 
-I encourage you to subscribe to the channel to get notified when I post about new projects.
+I encourage you to subscribe to the channel to get notified when I post about new projects. Finally, if you have any questions, let me know in the comment section of the video, since it is something I check often. 
+
+## Blog Post
+In addition to the video, I wrote a [short blog post](https://andresberejnoi.com/computer-vision-with-opencv-car-counting-system/) describing this project. It is supposed to be complementart to the video and not a replacement. 
+
+You can also leave a comment there with questions or ideas. 
 
 ## How to Set Up
 The `requirements.txt` file contains the required libraries to run the script. It also contains other libraries like Jupyter notebook which is not really necessary. The main libraries and configurations needed are the following:
