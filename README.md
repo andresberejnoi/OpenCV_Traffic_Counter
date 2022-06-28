@@ -23,7 +23,7 @@ I created a nice YouTube video explaining the project. You can watch it below:
 I encourage you to subscribe to the channel to get notified when I post about new projects. Finally, if you have any questions, let me know in the comment section of the video, since it is something I check often. 
 
 ## Blog Post
-In addition to the video, I wrote a [short blog post](https://andresberejnoi.com/computer-vision-with-opencv-car-counting-system/) describing this project. It is supposed to be complementart to the video and not a replacement. 
+In addition to the video, I wrote a [short blog post](https://andresberejnoi.com/computer-vision-with-opencv-car-counting-system/) describing this project. It is supposed to be complementary to the video and not a replacement. 
 
 You can also leave a comment there with questions or ideas. 
 
@@ -45,7 +45,7 @@ conda install -c menpo opencv
 ```
 
 ## How to Use
-There are several command line arguments that can given to the script. The information here might be outdated, so the safest way to check the available commands is by running:
+There are several command line arguments that can be given to the script. The information here might be outdated, so the safest way to check the available commands is by running:
 
 ```sh
 python main.py --help
@@ -79,7 +79,7 @@ optional arguments:
                         The number of contours to be detected by the program
                         (default is 10).
   -w WEBCAM [WEBCAM ...], --webcam WEBCAM [WEBCAM ...]
-                        Allows the user to specify which to use as the video
+                        Allows the user to specify which one to use as the video
                         source
   --rgb                 Boolean flag to use rbg colors.
   -vo VIDEO_OUT, --video_out VIDEO_OUT
