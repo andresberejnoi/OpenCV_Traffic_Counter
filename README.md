@@ -99,7 +99,7 @@ optional arguments:
 
 ```
 
-The most important argument is `-p` which gives the script the name of the file to analyze (use live camera video is not working yet). The flag `-d` is used to indicate the direction and position of the counting line. Like:
+The most important argument is `-p` which gives the script the name of the file to analyze (use of live camera video is not working yet). The flag `-d` is used to indicate the direction and position of the counting line. Like:
 
 ```sh
 python main.py -p <path_to_your_video> -d v 0.5
