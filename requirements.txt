@@ -19,7 +19,7 @@ jsonschema @ file:///tmp/build/80754af9/jsonschema_1594363551272/work
 jupyter==1.0.0
 jupyter-client @ file:///tmp/build/80754af9/jupyter_client_1594826976318/work
 jupyter-console==6.1.0
-jupyter-core==4.6.3
+jupyter-core==4.11.2
 MarkupSafe @ file:///tmp/build/80754af9/markupsafe_1594371495811/work
 mistune @ file:///tmp/build/80754af9/mistune_1594373098390/work
 mkl-fft==1.1.0
